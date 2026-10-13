@@ -13,7 +13,16 @@ python run.py
 
 매번 새 샘플에서 시작합니다. 성공 시 이 폴더의 **실습용 library.db를 새 결과로 덮어씁니다.** 직접 수정한 DB를 보관하려면 실행 전에 다른 이름으로 복사하세요. SQL 오류가 나면 기존 DB 저장 전에 중단합니다.
 
-실행 중 SQL과 결과가 터미널에 나오고, [results/query_results.txt](results/query_results.txt)에 저장됩니다. 결과 텍스트 제출이 허용되므로 쿼리마다 별도 스크린샷을 만들 필요는 없습니다.
+실행 중 SQL과 결과가 터미널에 나옵니다. **queries.sql의 각 문항 코드 아래에 실제로 실행해 확인한 결과를 `--` 주석으로 미리 기록했습니다.** 실행 도우미는 이 파일이나 결과 주석을 수정하지 않습니다. 전체 실행의 제출용 결과 사본은 [results/query_results.txt](results/query_results.txt)에도 보관합니다.
+
+한 문항만 실행하려면 번호를 붙입니다.
+
+```powershell
+python run.py 9
+python run.py 13
+```
+
+선택한 SQL만 실행해 터미널에서 결과를 확인합니다. 매번 메모리에 새 샘플을 준비하므로 UPDATE/DELETE/인덱스도 반복해서 시연할 수 있습니다. 개별 실행은 기존 library.db와 제출용 결과 사본을 변경하지 않습니다. SQL을 수정한다면 저장한 뒤 실행하세요. 코드나 샘플이 바뀌면 기존 결과 주석은 실제 결과와 달라질 수 있습니다.
 
 ## 파일 역할
 
@@ -21,7 +30,7 @@ python run.py
 | --- | --- |
 | schema.sql | 테이블·PK·FK·제약조건 생성 |
 | seed.sql | 부모부터 순서대로 샘플 INSERT |
-| queries.sql | 번호와 설명을 붙인 핵심 SQL 15개 |
+| queries.sql | 번호와 설명을 붙인 핵심 SQL 15개와 문항별 결과 주석 |
 | run.py | SQL 실행, 제약조건 확인, 결과 및 DB 저장 |
 | results/query_results.txt | 실제 실행 결과. SQL 15개와 수정/삭제 전후 포함 |
 

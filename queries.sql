@@ -1,24 +1,95 @@
 -- Q01: 기본 조회 - 18,000원 이상인 책을 찾는다.
 SELECT id, title, price FROM book WHERE price >= 18000 ORDER BY id;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- id | title | price
+-- 3 | 우주의 시작 | 18000
+-- 5 | 처음 배우는 SQL | 22000
+-- 6 | 파이썬 첫걸음 | 24000
+-- 8 | 생활 속 경제 | 19000
+-- 11 | 질문의 힘 | 20000
+-- 결과: 5행
+-- 실행 결과 끝
+
 -- Q02: 기본 조회 - 비싼 책부터 상위 3권을 확인한다.
 SELECT title, price FROM book ORDER BY price DESC, id LIMIT 3;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- title | price
+-- 파이썬 첫걸음 | 24000
+-- 처음 배우는 SQL | 22000
+-- 질문의 힘 | 20000
+-- 결과: 3행
+-- 실행 결과 끝
+
 -- Q03: 기본 조회 - 제목에 'SQL'이 포함된 책을 찾는다.
 SELECT id, title FROM book WHERE title LIKE '%SQL%' ORDER BY id;
+
+-- 실행 결과 시작 (새 샘플 기준)
+-- id | title
+-- 5 | 처음 배우는 SQL
+-- 결과: 1행
+-- 실행 결과 끝
 
 -- Q04: 기본 조회 - 아직 반납하지 않은 대여를 최신순으로 확인한다.
 SELECT id, member_id, book_id, rented_at FROM rental
 WHERE returned_at IS NULL ORDER BY rented_at DESC, id DESC;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- id | member_id | book_id | rented_at
+-- 15 | 4 | 3 | 2026-10-04
+-- 14 | 3 | 6 | 2026-10-03
+-- 13 | 2 | 5 | 2026-10-02
+-- 12 | 1 | 2 | 2026-10-01
+-- 결과: 4행
+-- 실행 결과 끝
+
 -- Q05: INNER JOIN - 모든 책에 분류 이름을 붙여 확인한다.
 SELECT b.title, c.name AS category_name FROM book AS b
 INNER JOIN category AS c ON b.category_id = c.id ORDER BY b.id;
+
+-- 실행 결과 시작 (새 샘플 기준)
+-- title | category_name
+-- 봄의 도서관 | 소설
+-- 달빛 산책 | 소설
+-- 우주의 시작 | 과학
+-- 우리 역사 이야기 | 역사
+-- 처음 배우는 SQL | 컴퓨터
+-- 파이썬 첫걸음 | 컴퓨터
+-- 그림 읽는 시간 | 예술
+-- 생활 속 경제 | 경제
+-- 기차로 떠나는 여행 | 여행
+-- 한 그릇 요리 | 요리
+-- 질문의 힘 | 철학
+-- 계절의 문장 | 시
+-- 결과: 12행
+-- 실행 결과 끝
 
 -- Q06: INNER JOIN - 회원 이름과 그 회원의 대여 기록을 연결한다.
 SELECT m.id AS member_id, m.name, r.id AS rental_id, r.rented_at
 FROM member AS m INNER JOIN rental AS r ON m.id = r.member_id
 ORDER BY m.id, r.id;
+
+-- 실행 결과 시작 (새 샘플 기준)
+-- member_id | name | rental_id | rented_at
+-- 1 | 김하나 | 1 | 2026-09-01
+-- 1 | 김하나 | 2 | 2026-09-10
+-- 1 | 김하나 | 12 | 2026-10-01
+-- 2 | 이두리 | 3 | 2026-09-02
+-- 2 | 이두리 | 13 | 2026-10-02
+-- 3 | 박세나 | 4 | 2026-09-03
+-- 3 | 박세나 | 14 | 2026-10-03
+-- 4 | 최다온 | 5 | 2026-09-04
+-- 4 | 최다온 | 15 | 2026-10-04
+-- 5 | 정라온 | 6 | 2026-09-05
+-- 5 | 정라온 | 16 | 2026-10-05
+-- 6 | 강마루 | 7 | 2026-09-06
+-- 7 | 윤보람 | 8 | 2026-09-07
+-- 8 | 장소담 | 9 | 2026-09-08
+-- 9 | 임아람 | 10 | 2026-09-09
+-- 10 | 한여름 | 11 | 2026-09-10
+-- 결과: 16행
+-- 실행 결과 끝
 
 -- Q07: INNER JOIN - 미반납 대여에 회원 이름과 도서 제목을 붙인다.
 SELECT r.id, m.name, b.title, r.rented_at FROM rental AS r
@@ -26,35 +97,157 @@ INNER JOIN member AS m ON r.member_id = m.id
 INNER JOIN book AS b ON r.book_id = b.id
 WHERE r.returned_at IS NULL ORDER BY r.id;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- id | name | title | rented_at
+-- 12 | 김하나 | 달빛 산책 | 2026-10-01
+-- 13 | 이두리 | 처음 배우는 SQL | 2026-10-02
+-- 14 | 박세나 | 파이썬 첫걸음 | 2026-10-03
+-- 15 | 최다온 | 우주의 시작 | 2026-10-04
+-- 결과: 4행
+-- 실행 결과 끝
+
 -- Q08: LEFT JOIN - 대여하지 않은 회원도 포함해 모든 회원을 확인한다.
 SELECT m.id AS member_id, m.name, r.id AS rental_id
 FROM member AS m LEFT JOIN rental AS r ON m.id = r.member_id
 ORDER BY m.id, r.id;
+
+-- 실행 결과 시작 (새 샘플 기준)
+-- member_id | name | rental_id
+-- 1 | 김하나 | 1
+-- 1 | 김하나 | 2
+-- 1 | 김하나 | 12
+-- 2 | 이두리 | 3
+-- 2 | 이두리 | 13
+-- 3 | 박세나 | 4
+-- 3 | 박세나 | 14
+-- 4 | 최다온 | 5
+-- 4 | 최다온 | 15
+-- 5 | 정라온 | 6
+-- 5 | 정라온 | 16
+-- 6 | 강마루 | 7
+-- 7 | 윤보람 | 8
+-- 8 | 장소담 | 9
+-- 9 | 임아람 | 10
+-- 10 | 한여름 | 11
+-- 11 | 오가을 | NULL
+-- 12 | 서겨울 | NULL
+-- 결과: 18행
+-- 실행 결과 끝
 
 -- Q09: 집계 - 회원별 대여 횟수를 구한다. COUNT(r.id)는 NULL을 세지 않는다.
 SELECT m.id, m.name, COUNT(r.id) AS rental_count
 FROM member AS m LEFT JOIN rental AS r ON m.id = r.member_id
 GROUP BY m.id, m.name ORDER BY rental_count DESC, m.id;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- id | name | rental_count
+-- 1 | 김하나 | 3
+-- 2 | 이두리 | 2
+-- 3 | 박세나 | 2
+-- 4 | 최다온 | 2
+-- 5 | 정라온 | 2
+-- 6 | 강마루 | 1
+-- 7 | 윤보람 | 1
+-- 8 | 장소담 | 1
+-- 9 | 임아람 | 1
+-- 10 | 한여름 | 1
+-- 11 | 오가을 | 0
+-- 12 | 서겨울 | 0
+-- 결과: 12행
+-- 실행 결과 끝
+
 -- Q10: 집계 - 분류별 도서 수와 도서 가격 합계를 확인한다. 매출을 뜻하지 않는다.
 SELECT c.id, c.name, COUNT(b.id) AS book_count, SUM(b.price) AS total_book_price
 FROM category AS c INNER JOIN book AS b ON c.id = b.category_id
 GROUP BY c.id, c.name ORDER BY c.id;
+
+-- 실행 결과 시작 (새 샘플 기준)
+-- id | name | book_count | total_book_price
+-- 1 | 소설 | 2 | 27000
+-- 2 | 과학 | 1 | 18000
+-- 3 | 역사 | 1 | 16000
+-- 4 | 컴퓨터 | 2 | 46000
+-- 5 | 예술 | 1 | 17000
+-- 6 | 경제 | 1 | 19000
+-- 7 | 여행 | 1 | 14000
+-- 8 | 요리 | 1 | 13000
+-- 9 | 철학 | 1 | 20000
+-- 10 | 시 | 1 | 11000
+-- 결과: 10행
+-- 실행 결과 끝
 
 -- Q11: 집계 - 분류별 도서 평균 가격을 구한다.
 SELECT c.id, c.name, ROUND(AVG(b.price), 2) AS average_price
 FROM category AS c INNER JOIN book AS b ON c.id = b.category_id
 GROUP BY c.id, c.name ORDER BY average_price DESC, c.id;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- id | name | average_price
+-- 4 | 컴퓨터 | 23000.0
+-- 9 | 철학 | 20000.0
+-- 6 | 경제 | 19000.0
+-- 2 | 과학 | 18000.0
+-- 5 | 예술 | 17000.0
+-- 3 | 역사 | 16000.0
+-- 7 | 여행 | 14000.0
+-- 1 | 소설 | 13500.0
+-- 8 | 요리 | 13000.0
+-- 10 | 시 | 11000.0
+-- 결과: 10행
+-- 실행 결과 끝
+
 -- Q12: 서브쿼리 - 전체 평균 가격보다 비싼 책을 찾는다.
 SELECT title, price FROM book WHERE price > (SELECT AVG(price) FROM book)
 ORDER BY price DESC, id;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- title | price
+-- 파이썬 첫걸음 | 24000
+-- 처음 배우는 SQL | 22000
+-- 질문의 힘 | 20000
+-- 생활 속 경제 | 19000
+-- 우주의 시작 | 18000
+-- 그림 읽는 시간 | 17000
+-- 결과: 6행
+-- 실행 결과 끝
+
 -- Q13: UPDATE - 12번 대여의 반납일을 기록한다.
 UPDATE rental SET returned_at = '2026-10-13' WHERE id = 12;
+
+-- 실행 결과 시작 (새 샘플 기준)
+-- 변경 전:
+-- id | member_id | book_id | rented_at | returned_at
+-- 12 | 1 | 2 | 2026-10-01 | NULL
+-- 결과: 1행
+-- 변경: 1행
+-- 변경 후:
+-- id | member_id | book_id | rented_at | returned_at
+-- 12 | 1 | 2 | 2026-10-01 | 2026-10-13
+-- 결과: 1행
+-- 실행 결과 끝
 
 -- Q14: DELETE - 잘못 등록했다고 가정한 16번 대여 기록을 삭제한다.
 DELETE FROM rental WHERE id = 16;
 
+-- 실행 결과 시작 (새 샘플 기준)
+-- 변경 전:
+-- id | member_id | book_id | rented_at | returned_at
+-- 16 | 5 | 1 | 2026-10-05 | 2026-10-10
+-- 결과: 1행
+-- 변경: 1행
+-- 변경 후:
+-- id | member_id | book_id | rented_at | returned_at
+-- 결과: 0행
+-- 실행 결과 끝
+
 -- Q15: 인덱스 - 회원별 대여 조회와 member_id JOIN에 사용할 탐색 경로를 만든다.
 CREATE INDEX idx_rental_member_id ON rental(member_id);
+
+-- 실행 결과 시작 (새 샘플 기준)
+-- name | sql
+-- idx_rental_member_id | CREATE INDEX idx_rental_member_id ON rental(member_id)
+-- 결과: 1행
+-- id | parent | notused | detail
+-- 3 | 0 | 0 | SEARCH rental USING INDEX idx_rental_member_id (member_id=?)
+-- 결과: 1행
+-- 실행 결과 끝

@@ -1,4 +1,5 @@
-"""python run.py: 실습 DB를 새 샘플로 만들고 SQL 15개와 결과를 저장한다."""
+"""전체 실행: python run.py / 한 문항: python run.py 9"""
+import argparse
 import re
 import sqlite3
 from pathlib import Path
@@ -16,6 +17,10 @@ def show_rows(db, sql, output):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='SQL 전체 또는 한 문항을 새 샘플에서 실행')
+    parser.add_argument('question', nargs='?', type=int, choices=range(1, 16),
+                        help='실행할 문항 번호 1~15. 생략하면 전체 실행')
+    selected = parser.parse_args().question
     output = ['도서 대여 SQL 실습 결과', '매번 동일한 샘플로 시작합니다.\n']
     # 새 DB에서 먼저 실행하므로 기존 실습 DB는 SQL 실행 실패 시 바뀌지 않는다.
     with sqlite3.connect(':memory:') as db:
@@ -55,6 +60,10 @@ def main():
         if [number for number, _, _ in queries] != [f'{n:02}' for n in range(1, 16)]:
             raise ValueError('queries.sql에 Q01~Q15를 순서대로 작성하세요.')
         for number, description, sql in queries:
+            if selected is not None and int(number) != selected:
+                continue
+            # 코드 아래의 결과 주석은 실행 대상에서 제외한다.
+            sql = sql.split('-- 실행 결과 시작', 1)[0].strip()
             output.extend([f'\n[Q{number}] {description}', sql.strip()])
             if number in ('13', '14'):
                 target_id = 12 if number == '13' else 16
@@ -80,15 +89,19 @@ def main():
                 raise ValueError(f'{table}: 수정/삭제 후 최소 10행 조건을 확인하세요.')
             output.append(f'{table}: {count}행')
         db.commit()
-        with sqlite3.connect(ROOT / 'library.db') as saved:
-            db.backup(saved)
+        if selected is None:
+            with sqlite3.connect(ROOT / 'library.db') as saved:
+                db.backup(saved)
 
-    results = ROOT / 'results'
-    results.mkdir(exist_ok=True)
     report = '\n'.join(output) + '\n'
-    (results / 'query_results.txt').write_text(report, encoding='utf-8')
+    if selected is None:
+        results = ROOT / 'results'
+        results.mkdir(exist_ok=True)
+        (results / 'query_results.txt').write_text(report, encoding='utf-8')
     print(report)
-    print('완료: library.db / results/query_results.txt')
+    print('실행 완료. queries.sql의 기존 결과 주석은 변경하지 않습니다.')
+    if selected is not None:
+        print('개별 문항은 새 샘플에서 실행했습니다. 저장된 library.db는 바꾸지 않습니다.')
 
 
 if __name__ == '__main__':
