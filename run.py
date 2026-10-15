@@ -99,7 +99,7 @@ def main():
         results.mkdir(exist_ok=True)
         (results / 'query_results.txt').write_text(report, encoding='utf-8')
     print(report)
-    print('실행 완료. queries.sql의 기존 결과 주석은 변경하지 않습니다.')
+    print('실행 완료. results/query_results.txt를 확인하세요.')
     if selected is not None:
         print('개별 문항은 새 샘플에서 실행했습니다. 저장된 library.db는 바꾸지 않습니다.')
 
