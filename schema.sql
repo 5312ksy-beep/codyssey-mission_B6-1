@@ -1,4 +1,9 @@
--- SQLite용 도서 대여 DB. 실행 도구에서도 연결마다 FK 검사를 활성화한다.
+-- 대상 DB: SQLite
+-- 문자열은 SQLite가 지원하는 TEXT 타입을 사용한다. TEXT는 SQLite 전용 타입은 아니다.
+-- 날짜는 YYYY-MM-DD 형식의 TEXT로 저장한다.
+-- 다른 DB로 옮길 때는 자료형과 날짜 처리 방식을 확인해야 한다.
+
+-- SQLite 전용: 이 연결에서 외래키 제약 검사를 활성화한다. 연결마다 설정해야 한다.
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE category (
